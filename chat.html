@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/business.css">
+</head>
+<body>
+	<section id="header">
+        <a href="#"><img src="images/localhublogo-removebg-preview.png" width="100" height="100"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="businessListing.html">Businesses</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="eventListing.html">Events</a></li>
+                <li><a href="community.html">Community</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <h1>Chat Here</h1>
+	<form onsubmit="return sendMessage();">
+    	<input id="message" placeholder="Enter message" autocomplete="off">
+        <input type="submit">
+		</form>
+	<ul id="messages"></ul>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+		import { getAuth } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-52IA35g1lPfT834STo6ekmLDxHJNLC4",
+            authDomain: "ingenium-demo.firebaseapp.com",
+			databaseURL: "https://ingenium-demo-default-rtdb.firebaseio.com/",
+            projectId: "ingenium-demo",
+            storageBucket: "ingenium-demo.appspot.com",
+            messagingSenderId: "868623799930",
+            appId: "1:868623799930:web:a647e3cbfc270c8e3f0dc3",
+            measurementId: "G-Y55KCPGVS3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const email = "neilpandit4@gmail.com"
+		var myName = prompt("Enter your name");
+		//var userId = FirebaseAuth.getInstance().getUserbyEmail(email); 
+        // Get a reference to the database
+        const db = getDatabase(app);
+    	function sendMessage() {
+        // get message
+        var message = document.getElementById("message").value;
+ 
+		function writeUserData(myName, message) {
+  		set(ref(db, 'messages/' + myName), {
+    	sender: myName,
+    	message: message,
+    	//profile_picture : imageUrl
+  			});
+		}
+        // prevent form from submitting
+        return false;
+    }
+	const messageRef = ref(db, 'messages/'+ myName);
+  	const data = snapshot.val();
+	  if (snapshot.exists()) {
+    console.log(snapshot.val());
+	  	} else {
+    console.log("No data available");
+  }
+
+	/*var html = "";
+	html += "<li id='message-" + snapshot.key + "'>";
+        // show delete button if message is sent by me
+        if (snapshot.val().sender == myName) {
+            html += "<button data-id='" + snapshot.key + "' onclick='deleteMessage(this);'>";
+                html += "Delete";
+            html += "</button>";
+        }
+        html += snapshot.val().sender + ": " + snapshot.val().message;
+        html += "</li>";
+ 
+        document.getElementById("messages").innerHTML += html;
+  	//updatemessageRef(postElement, data);
+		});*/
+	function deleteMessage(self) {
+    // get message ID
+    var messageId = self.getAttribute("data-id");
+ 
+    // delete message
+    firebase.database().ref("messages").child(messageId).remove();
+}
+ 
+// attach listener for delete message
+firebase.database().ref("messages").on("child_removed", function (snapshot) {
+    // remove message node
+    document.getElementById("message-" + snapshot.key).innerHTML = "This message has been removed";
+});
+    </script>
+</body>
+</html>
