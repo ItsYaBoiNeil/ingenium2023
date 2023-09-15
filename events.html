@@ -18,7 +18,7 @@
         </div>
     </section>
 
-    <h1>Business Details</h1>
+    <h1>Events Details</h1>
     <div id="loading" style="display: none;">
         Loading...
     </div>
@@ -82,46 +82,46 @@
 
         // Get the query parameter from the URL
         const queryParams = new URLSearchParams(window.location.search);
-        const clickedBusinessKey = queryParams.get('key');
+        const clickedeventsKey = queryParams.get('key');
 
         // Display the loading screen
         const loadingScreen = document.getElementById('loading');
         loadingScreen.style.display = 'block';
 
         // Use the key to fetch data from Firebase
-        const businessRef = ref(db, `businesses/${clickedBusinessKey}`);
-        get(businessRef).then((snapshot) => {
+        const eventsRef = ref(db, `events/${clickedeventsKey}`);
+        get(eventsRef).then((snapshot) => {
             if (snapshot.exists()) {
-                const businessData = snapshot.val();
-                const businessName = businessData.name;
-                const businessDescription = businessData.description;
-                const businessImageURL = businessData.imageURL;
-                const businessLocation = businessData.location;
-                const businessTimings = businessData.timings;
-                const businessContact = businessData.contact;
-				const businessDetailed = businessData.detail;
+                const eventsData = snapshot.val();
+                const eventsName = eventsData.name;
+                const eventsDescription = eventsData.description;
+                const eventsImageURL = eventsData.imageURL;
+                const eventsLocation = eventsData.location;
+                const eventsTimings = eventsData.timings;
+                const eventsContact = eventsData.contact;
+				const eventsDetailed = eventsData.detail;
 
                 // Display the retrieved data in your HTML elements
-                document.getElementById('businessName').textContent = businessName;
-                document.getElementById('businessDescription').textContent = businessDescription;
-                document.getElementById('businessImage').src = businessImageURL;
-                document.getElementById('businessLocation').textContent = businessLocation;
-                document.getElementById('businessTimings').textContent = businessTimings;
-                document.getElementById('businessContact').textContent = businessContact;
-				document.getElementById('businessDetailed').textContent = businessDetailed;
+                document.getElementById('businessName').textContent = eventsName;
+                document.getElementById('businessDescription').textContent = eventsDescription;
+                document.getElementById('businessImage').src = eventsImageURL;
+                document.getElementById('businessLocation').textContent = eventsLocation;
+                document.getElementById('businessTimings').textContent = eventsTimings;
+                document.getElementById('businessContact').textContent = eventsContact;
+				document.getElementById('businessDetailed').textContent = eventsDetailed;
 
                 // Hide the loading screen
                 loadingScreen.style.display = 'none';
             } else {
                 // Hide the loading screen and show an error message
                 loadingScreen.style.display = 'none';
-                alert("Business not found");
+                alert("Event not found");
             }
         }).catch((error) => {
-            console.error("Error getting business data:", error);
+            console.error("Error getting Event data:", error);
             // Hide the loading screen and show an error message
             loadingScreen.style.display = 'none';
-            alert("Error fetching business data");
+            alert("Error fetching Event data");
         });
     </script>
 </body>

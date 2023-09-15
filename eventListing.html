@@ -14,13 +14,13 @@
             <ul id="navbar">
                 <li><a class="active">Businesses</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="eventListing.html">Events</a></li>
+                <li><a href="shop.html">Shop</a></li>
                 <li><a href="community.html">Community</a></li>
             </ul>
         </div>
     </section>
-    <h1>Listed Businesses</h1>
-    <div id="business-list"></div>
+    <h1>Listed Events</h1>
+    <div id="events-list"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
@@ -40,43 +40,43 @@
         const db = getDatabase(app);
 
         const dbref = ref(db);
-        const businessList = document.getElementById('business-list');
+        const eventsList = document.getElementById('events-list');
 
-        get(child(dbref, "businesses")).then((snapshot) => {
+        get(child(dbref, "events")).then((snapshot) => {
             if (snapshot.exists()) {
-                const businessesData = snapshot.val();
+                const eventsData = snapshot.val();
 
                 // Loop through businesses and display their names, descriptions, and images
-                for (const businessKey in businessesData) {
-                    if (businessesData.hasOwnProperty(businessKey)) {
-                        const business = businessesData[businessKey];
-                        const businessName = business.name;
-                        const businessDescription = business.description;
-                        const businessImageURL = business.imageURL;
+                for (const eventsKey in eventsData) {
+                    if (eventsData.hasOwnProperty(eventsKey)) {
+                        const events = eventsData[eventsKey];
+                        const eventsName = events.name;
+                        const eventsDescription = events.description;
+                        const eventsImageURL = events.imageURL;
 
-                        const businessItem = document.createElement('div');
-                        businessItem.classList.add('businessItem');
-						businessItem.dataset.key = businessKey;
-                        businessItem.innerHTML = `
+                        const eventsItem = document.createElement('div');
+                        eventsItem.classList.add('eventsItem');
+						eventsItem.dataset.key = eventsKey;
+                        eventsItem.innerHTML = `
                             <div class="col_business">
-                                <img src="${businessImageURL}" alt="${businessName} Image">
+                                <img src="${eventsImageURL}" alt="${eventsName} Image">
                             </div>
                             <div class="col_business">
-                                <h2>${businessName}</h2>
+                                <h2>${eventsName}</h2>
                                 <h3>Slogan</h3>
                                 <b>Contact details</b>
-                                <p>${businessDescription}</p>
+                                <p>${eventsDescription}</p>
                             </div>
                         `;
-                        businessList.appendChild(businessItem);
-						 businessItem.addEventListener('click', () => {
+                        eventsList.appendChild(eventsItem);
+                        eventsItem.addEventListener('click', () => {
             // Retrieve the unique identifier (business key)
-            const clickedBusinessKey = businessItem.dataset.key;
+            const clickedeventsKey = eventsItem.dataset.key;
 
             // Construct a URL with query parameters and open business.html
             const queryParams = new URLSearchParams();
-            queryParams.set('key', clickedBusinessKey);
-            window.location.href = `business.html?${queryParams.toString()}`;
+            queryParams.set('key', clickedeventsKey);
+            window.location.href = `events.html?${queryParams.toString()}`;
         });
                     }
                 }
