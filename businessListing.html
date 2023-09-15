@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="images/localhublogo-removebg-preview.png" width="100" height="100"></a>
+        <div>
+            <ul id="navbar">
+                <li><a class="active">Businesses</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="community.html">Community</a></li>
+            </ul>
+        </div>
+    </section>
+    <h1>Listed Businesses</h1>
+    <div id="business-list"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+        import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-52IA35g1lPfT834STo6ekmLDxHJNLC4",
+            authDomain: "ingenium-demo.firebaseapp.com",
+            projectId: "ingenium-demo",
+            storageBucket: "ingenium-demo.appspot.com",
+            messagingSenderId: "868623799930",
+            appId: "1:868623799930:web:a647e3cbfc270c8e3f0dc3",
+            measurementId: "G-Y55KCPGVS3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const dbref = ref(db);
+        const businessList = document.getElementById('business-list');
+
+        get(child(dbref, "businesses")).then((snapshot) => {
+            if (snapshot.exists()) {
+                const businessesData = snapshot.val();
+
+                // Loop through businesses and display their names, descriptions, and images
+                for (const businessKey in businessesData) {
+                    if (businessesData.hasOwnProperty(businessKey)) {
+                        const business = businessesData[businessKey];
+                        const businessName = business.name;
+                        const businessDescription = business.description;
+                        const businessImageURL = business.imageURL;
+
+                        const businessItem = document.createElement('div');
+                        businessItem.classList.add('businessItem');
+						businessItem.dataset.key = businessKey;
+                        businessItem.innerHTML = `
+                            <div class="col_business">
+                                <img src="${businessImageURL}" alt="${businessName} Image">
+                            </div>
+                            <div class="col_business">
+                                <h2>${businessName}</h2>
+                                <h3>Slogan</h3>
+                                <b>Contact details</b>
+                                <p>${businessDescription}</p>
+                            </div>
+                        `;
+                        businessList.appendChild(businessItem);
+						 businessItem.addEventListener('click', () => {
+            // Retrieve the unique identifier (business key)
+            const clickedBusinessKey = businessItem.dataset.key;
+
+            // Construct a URL with query parameters and open business.html
+            const queryParams = new URLSearchParams();
+            queryParams.set('key', clickedBusinessKey);
+            window.location.href = `business.html?${queryParams.toString()}`;
+        });
+                    }
+                }
+            } else {
+                alert("No data found");
+            }
+        }).catch((error) => {
+            console.error("Error getting data:", error);
+        });
+    </script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+p, h1 {
+    color: aliceblue;
+}
+
+.star {
+    font-size: 24px;
+    color: #7823e7;
+}
+
+.star.filled {
+    color: purple;
+}
+
+.comment {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.comment input {
+    display: block;
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+html {
+    background-color: #420f85;
+}
+
+#header {
+    background-color: #150529;
+    width: 100%;
+    height: 100px; 
+
+
+}
+.back{
+    position: absolute;
+    top:20%;
+    left:10%;
+}
+.display{
+    background-color: white;
+    position: absolute;
+    right:10px;
+    height:90%;
+    width:50%;
+    
+}
+.disp{
+    width: 70%;
+    position:absolute;
+    left:20%;
+    top:5%;
+}
+hr {
+    height: 5px; /* Adjust the height to change the thickness */
+    background-color: #000; /* Color of the horizontal rule */
+    border: none; /* Remove the default border */
+    margin: 10px 0; /* Margin to control spacing around the HR element */
+}
+.star1 {
+    font-size: 24px;
+    color: #7823e7;
+}
+
+.star1.filled {
+    color: purple;
+}

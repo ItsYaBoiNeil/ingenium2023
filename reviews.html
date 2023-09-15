@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rating</title>
+    <link rel="stylesheet" href="css/styles2.css">
+</head>
+<body>
+    <div id="header"></div>
+    <div class="back">
+        <label class="name"><h1>name</h1><input id="name"></label>
+        <label class="id"><h1>id</h1><input id="id"></label>
+        <h1 class="rating_heading">rating</h1>
+        <label class="comment"><input id="comment"></label>
+        <div class="star_rating">
+            <p>How was your experience?</p>
+            <button class="star">&#9734;</button>
+            <button class="star">&#9734;</button>
+            <button class="star">&#9734;</button>
+            <button class="star">&#9734;</button>
+            <button class="star">&#9734;</button>
+            <p class="current_rating">0 of 5</p>
+        </div>
+        <button id="post">post</button>
+    </div>
+    <div class="display">
+        <h2>id:</h2>
+        <input class="disp" id="disp">
+        <button class="search" id="search">search</button>
+        <button class="search" id="delete">DELETE</button>
+        
+        <h2>name=</h2>
+        <h3 class="findname">......</h3>
+        <h2>rating=</h2>
+        <div class="star_rating">
+            <p>How was your experience?</p>
+            <button class="star1">&#9734;</button>
+            <button class="star1">&#9734;</button>
+            <button class="star1">&#9734;</button>
+            <button class="star1">&#9734;</button>
+            <button class="star1">&#9734;</button>
+        </div>
+        <h2>comment=</h2>
+        <h3 class="findcomm">.....</h3>
+        <hr>
+    </div>
+    <script type="module">
+        // Import the functions you need from the Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js";
+        import { getDatabase, set, ref, get, child, remove } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-database.js";
+
+        // Your Firebase web app's configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBiVzcDgfh1GQdiaMK6Q2M4ZOAuCBpPsuo",
+          authDomain: "first-d6f22.firebaseapp.com",
+          databaseURL: "https://first-d6f22-default-rtdb.firebaseio.com",
+          projectId: "first-d6f22",
+          storageBucket: "first-d6f22.appspot.com",
+          messagingSenderId: "443754451721",
+          appId: "1:443754451721:web:3876e9176c729da39ab9d8"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        const postButton = document.getElementById("post");
+        const searchButton = document.getElementById("search");
+        const deleteButton = document.getElementById("delete"); // Corrected button ID
+        const enterID = document.getElementById("id");
+        const enterName = document.getElementById("name");
+        const enterComment = document.getElementById("comment");
+        const disp = document.getElementById("disp");
+        const findname = document.querySelector('.findname');
+        const findrate = document.querySelector('.findrate');
+        const findcomm = document.querySelector('.findcomm');
+        let current_star_level = 0; // Initialize the rating variable
+
+        const allStars = document.querySelectorAll('.star');
+        const allStars1 = document.querySelectorAll('.star1');
+        const current_rating = document.querySelector('.current_rating');
+
+        allStars.forEach((star, i) => {
+            star.onclick = function () {
+                current_star_level = i + 1;
+                current_rating.innerText = `${current_star_level} of 5`;
+
+                allStars.forEach((star, j) => {
+                    if (current_star_level >= j + 1) {
+                        star.innerHTML = '&#9733;';
+                    } else {
+                        star.innerHTML = '&#9734;';
+                    }
+                });
+            };
+        });
+
+        function InsertData() {
+            set(ref(db, "People/" + enterID.value), {
+                Name: enterName.value,
+                ID: enterID.value,
+                Comment: enterComment.value,
+                Rating: current_star_level
+            })
+            .then(() => {
+                alert("Data inserted successfully.");
+            })
+            .catch((error) => {
+                alert("Error: " + error);
+            });
+        }
+
+        function FindData() {
+            const dbref = ref(db);
+            get(child(dbref, "People/" + disp.value))
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    findname.innerHTML = snapshot.val().Name;
+                    
+                    var r=snapshot.val().Rating;
+                    allStars1.forEach((star1, j) => {
+                    if (r >= j + 1) {
+                        star1.innerHTML = '&#9733;';
+                    } else {
+                        star1.innerHTML = '&#9734;';
+                    }
+                    });
+                    findcomm.innerHTML = snapshot.val().Comment;
+                } else {
+                    alert("No data found.");
+                }
+            })
+            .catch((error) => {
+                alert(error);
+            });
+        }
+        function RemoveData(){
+            remove(ref(db, "People/"+ disp.value))
+            .then(()=>{
+                alert("data removed");
+            })
+            .catch((error)=>{
+                alert(error);
+            })
+        }
+
+        deleteButton.addEventListener('click', RemoveData);
+        postButton.addEventListener('click', InsertData);
+        searchButton.addEventListener('click', FindData);
+    </script>
+</body>
+</html>

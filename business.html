@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/business.css">
+</head>
+<body>
+	<section id="header">
+        <a href="#"><img src="images/localhublogo-removebg-preview.png" width="100" height="100"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="businessListing.html">Businesses</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="community.html">Community</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <h1>Business Details</h1>
+    <div id="loading" style="display: none;">
+        Loading...
+    </div>
+	<div class="business-info">
+		<div class="business">
+			<div>
+				<img id="businessImage" src="" alt="Business Image">
+			</div>
+			<div>
+				<h2 id="businessName"></h2>
+				<p id="businessDescription"></p>
+			</div>
+		</div>
+		<div id="title"> 
+			<h3> Our Products</h3>
+        </div>
+        <div id="productimages">
+            <img id="ProductImage" src="https://source.unsplash.com/200x200/?pencil" alt="Business Image">
+            <img id="ProductImage" src="https://source.unsplash.com/200x200/?pen" alt="Business Image">
+            <img id="ProductImage" src="https://source.unsplash.com/200x200/?book" alt="Business Image">
+            <img id="ProductImage" src="https://source.unsplash.com/200x200/?laptop" alt="Business Image">
+        </div>
+		<div id="title"> 
+			<h3>Detailed Description</h3>
+			<p id="businessDetailed"></p>
+        </div>
+		<div id="title"> 
+			<h3> Location</h3>
+			<p id="businessLocation"></p>
+        </div>
+		<div id="title"> 
+			<h3> Timings</h3>
+			<p id="businessTimings"></p>
+        </div>
+		<div id="title"> 
+			<h3> Contact Us</h3>
+			<p id="businessContact"></p>
+        </div>
+	</div>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-52IA35g1lPfT834STo6ekmLDxHJNLC4",
+            authDomain: "ingenium-demo.firebaseapp.com",
+            projectId: "ingenium-demo",
+            storageBucket: "ingenium-demo.appspot.com",
+            messagingSenderId: "868623799930",
+            appId: "1:868623799930:web:a647e3cbfc270c8e3f0dc3",
+            measurementId: "G-Y55KCPGVS3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get a reference to the database
+        const db = getDatabase(app);
+
+        // Get the query parameter from the URL
+        const queryParams = new URLSearchParams(window.location.search);
+        const clickedBusinessKey = queryParams.get('key');
+
+        // Display the loading screen
+        const loadingScreen = document.getElementById('loading');
+        loadingScreen.style.display = 'block';
+
+        // Use the key to fetch data from Firebase
+        const businessRef = ref(db, `businesses/${clickedBusinessKey}`);
+        get(businessRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const businessData = snapshot.val();
+                const businessName = businessData.name;
+                const businessDescription = businessData.description;
+                const businessImageURL = businessData.imageURL;
+                const businessLocation = businessData.location;
+                const businessTimings = businessData.timings;
+                const businessContact = businessData.contact;
+				const businessDetailed = businessData.detail;
+
+                // Display the retrieved data in your HTML elements
+                document.getElementById('businessName').textContent = businessName;
+                document.getElementById('businessDescription').textContent = businessDescription;
+                document.getElementById('businessImage').src = businessImageURL;
+                document.getElementById('businessLocation').textContent = businessLocation;
+                document.getElementById('businessTimings').textContent = businessTimings;
+                document.getElementById('businessContact').textContent = businessContact;
+				document.getElementById('businessDetailed').textContent = businessDetailed;
+
+                // Hide the loading screen
+                loadingScreen.style.display = 'none';
+            } else {
+                // Hide the loading screen and show an error message
+                loadingScreen.style.display = 'none';
+                alert("Business not found");
+            }
+        }).catch((error) => {
+            console.error("Error getting business data:", error);
+            // Hide the loading screen and show an error message
+            loadingScreen.style.display = 'none';
+            alert("Error fetching business data");
+        });
+    </script>
+</body>
+</html>
